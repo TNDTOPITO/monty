@@ -1,3 +1,5 @@
+#include "monty.h"
+
 /**
  * push - This function pushes an element into the stack
  * @stack: Stack list
