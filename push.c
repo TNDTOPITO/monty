@@ -1,37 +1,51 @@
-#include "monty.h"
 /**
- * f_push - add node to the stack
- * @head: stack head
- * @counter: line_number
- * Return: no return
-*/
-void f_push(stack_t **head, unsigned int counter)
+ * push - This function pushes an element into the stack
+ * @stack: Stack list
+ * @line_number: Line number
+ *
+ * Return: ...
+ */
+int push(stack_t **stack, unsigned int line_number)
 {
-	int n, j = 0, flag = 0;
+	stack_t *new;
+	int i = 0;
 
-	if (bus.arg)
+	if (!argv[1])
 	{
-		if (bus.arg[0] == '-')
-			j++;
-		for (; bus.arg[j] != '\0'; j++)
+		fprintf(stderr, "L%d: usage: push integer\n", line_number);
+		return (-1);
+	}
+	while (argv[1][i])
+	{
+		if (argv[1][i] == '-' && i == 0)
 		{
-			if (bus.arg[j] > 57 || bus.arg[j] < 48)
-				flag = 1; }
-		if (flag == 1)
-		{ fprintf(stderr, "L%d: usage: push integer\n", counter);
-			fclose(bus.file);
-			free(bus.content);
-			free_stack(*head);
-			exit(EXIT_FAILURE); }}
+			i++;
+			continue;
+		}
+		if (!isdigit(argv[1][i]))
+		{
+			fprintf(stderr, "L%d: usage: push integer\n", line_number);
+			return (-1);
+		}
+		i++;
+	}
+	new = malloc(sizeof(stack_t));
+	if (!new)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		return (-1);
+	}
+	new->n = atoi(argv[1]);
+	new->prev = NULL;
+	if (!stack || !*stack)
+		new->next = NULL;
 	else
-	{ fprintf(stderr, "L%d: usage: push integer\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE); }
-	n = atoi(bus.arg);
-	if (bus.lifi == 0)
-		addnode(head, n);
-	else
-		addqueue(head, n);
+	{
+		(**stack).prev = new;
+		new->next = *stack;
+	}
+	*stack = new;
+	if (stacks == 0)
+		rotl(stack, line_number);
+	return (0);
 }
